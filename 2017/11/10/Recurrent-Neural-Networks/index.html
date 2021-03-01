@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Recurrent Neural Networks | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="MathJax.Hub.Config({             tex2jax: {             skipTags: [&#39;script&#39;, &#39;noscript&#39;, &#39;style&#39;, &#39;textarea&#39;, &#39;pre&#39;],             inlineMath: [[&#39;$&#39;,&#39;$&#39;]]             }         });">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Recurrent Neural Networks">
+<meta property="og:url" content="http://example.com/2017/11/10/Recurrent-Neural-Networks/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="MathJax.Hub.Config({             tex2jax: {             skipTags: [&#39;script&#39;, &#39;noscript&#39;, &#39;style&#39;, &#39;textarea&#39;, &#39;pre&#39;],             inlineMath: [[&#39;$&#39;,&#39;$&#39;]]             }         });">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/_image/1-1.png">
+<meta property="article:published_time" content="2017-11-10T02:48:52.000Z">
+<meta property="article:modified_time" content="2021-02-18T06:54:53.029Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/_image/1-1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Recurrent-Neural-Networks" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2017/11/10/Recurrent-Neural-Networks/" class="article-date">
+  <time class="dt-published" datetime="2017-11-10T02:48:52.000Z" itemprop="datePublished">2017-11-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Recurrent Neural Networks
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
+
+
+<p><strong><em>Recurrent Neural Networks (RNNs)</em></strong> can be used for prediction. It can analyze time series data such as stock prices and tell you when you should buy/sell. It is also possible to predict the trajectory of the vehicle in an automatic driving system, thereby avoiding traffic accidents. Unlike many other neural networks, the length of input sequence for RNNs is flexible. In this way, you can replace RNNs with different parameter sequences, such as an article, or an audio sample, and this is one of the reasons why RNNs often excel in the NLP line. More importantly, RNNs have the ability to predict continuous data, so it can cope with innovative tasks including automatic arrangement, text writing and so on.</p>
+<h2 id="1-Recurrent-Neurons"><a href="#1-Recurrent-Neurons" class="headerlink" title="1. Recurrent Neurons"></a>1. Recurrent Neurons</h2><p>For most neural networks, the propagation direction is basically one direction, that is, the more common feed-forward network. For RNNs, its propagation direction is bidirectional. The simplest example is to receive input $x_\left(t\right)$ from only one <strong><em>recurrent neuron</em></strong>, and the output $y_\left(t-1\right)$ of the neuron at the last moment. If we extend it in timeline, we can get the effect shown in Figure 1-1.</p>
+<p><img src="/_image/1-1.png" alt="Figure 1-1"></p>
+<p>Therefore, it is not very complex to generate a layer composed of recurrent neurons – just requires that every neuron receives $x_\left(t\right)$ and $y_\left(t-1\right)$ as the input at any time. For each recurrent neuron, there are two sets of weights: $w_x$ and $w_y$ for the input $x_\left(t\right)$ and $y_\left(t-1\right)$, so the output $y_\left(t\right)$ can be represented as:</p>
+<p>$$y_\left(t\right)=\phi\left(x^T_t \cdot w_x + y^T_\left(t-1\right) \cdot w_y + b\right)$$</p>
+<p>where $b$ is the bias term and $\Phi$ is the activation function (many researchers prefer to use <strong>hyperbolic tangent</strong> rather than ReLU in RNNs), and thus <strong>the output of the whole layer</strong> is:</p>
+<p>$$Y_\left(t\right)=\phi\left(X_\left(t\right)\cdot W_x + Y_\left(t-1\right)\cdot W_y + b\right)$$</p>
+<p>simplified to:</p>
+<p>$$Y_\left(t\right)=\phi\left([X_\left(t\right)Y_\left(t-1\right)]\cdot W + b\right) \ with \ W = \begin{bmatrix}W_x\\W_y\end{bmatrix}$$</p>
+<ul>
+<li>$Y_\left(t\right)$ is a matrix containing all outputs at time step $t$ with size $m\times n_{neurons}$, where $m$ is the number of instances in this mini-batch and $n_{neurons}$ is the number of neurons.</li>
+<li>$X_\left(t\right)$ is an $m\times n_{inputs}$ matrix containing all input instances, where $n_{inputs}$ is the number of input features.</li>
+<li>$W_x$ and $W_y$ are matrices containing connection weights for $X_\left(t\right)$ and $Y_\left(t-1\right)$. Since the size of $W_x$ and $W_y$ are $n_{inputs}\times n_{neurons}$ and $n_{neurons}\times n_{neurons}$, $W_x$ and $W_y$ are usually concatenated as a single weight matrix $W$ of shape $\left(n_{inputs} + n_{neurons}\right)\times n_{neurons}$.</li>
+<li>$b$ is a vector containing all bias terms for every neuron. </li>
+</ul>
+<h2 id="2-Memory-Cells-and-The-Input-Output-Sequence-of-RNNs"><a href="#2-Memory-Cells-and-The-Input-Output-Sequence-of-RNNs" class="headerlink" title="2. Memory Cells and The Input/Output Sequence of RNNs"></a>2. Memory Cells and The Input/Output Sequence of RNNs</h2><p>Because recurrent neuron is concerning of all inputs at last time step $t-1$ while it is dealing with the output at the time step $t$, recurrent neuron can be treated as a unit with memory, and the part of the network, being able to preserve the state of sequence, is called a <strong><em>memory cell</em></strong>, or simply a <strong><em>cell</em></strong>. The most basic format of a memory cell is one recurrent neuron or one layer consisting of recurrent neurons.</p>
+<p>Generally, we use $h_\left(t\right)$ to stand for the hidden state of a memory cell at time step $t$. The value of $h_\left(t\right)$ is apropos the input at the current time step and the hidden state at the last time step, which can be described as: $h_{(t)}=f(h_{(t-1)}, x_{(t)})$. The output at the time step $t$, denoted $y_{(t)}$, is also determined by the previous hidden state and the current inputs. $h_{(t)}$ and $y_{(t)}$ are not always equal in some convoluted cases. The application of RNNs is very flexible. An RNN can generate an output sequence by simulating an input sequence, namely Seq2Seq. Thus it can be used to predict time series, such as stock prices. Another application method is to input a sequence, and then ignore other outputs, and keep only the last output. This method can be used to vectorize a sequence, that is, Seq2Vec. For example, a movie-related comment can be turned into a word sequence, and then input this sequence into a network and expect an output as the score of this movie. The opposite way is to keep only the first input and set all the inputs at other times to 0, and then let the network output the entire sequence, so it is a Vec2Seq network. For example, you can enter an image and then output a text description about it. The last common method is that you can use a Seq2Vec network as the encoder,and then connect a Vec2Seq network as the decoder, which forms a delayed Seq2Seq network. For example, you can translate one language into another. First, language A is input into the encoder section and converted into a vector value. Then use the decoder to decode this vector and convert it to language B. This two-step model is called the Encoder-Decoder model. Compared with ordinary Seq2Seq, this way does not need to wait for the entire sentence to be fully input before translating.</p>
+<h2 id="3-Build-RNNs-Based-on-TensorFlow"><a href="#3-Build-RNNs-Based-on-TensorFlow" class="headerlink" title="3. Build RNNs Based on TensorFlow"></a>3. Build RNNs Based on TensorFlow</h2><p>Without using any RNN related operations in TF, we try to create a layer consisting of 5 recurrent neurons. Choose $\tanh$ for the Activation function. Suppose this RNN only runs two moments, and the input of each moment is a vector of length 3.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">n_inputs = <span class="number">3</span></span><br><span class="line">n_neurons = <span class="number">5</span></span><br><span class="line"> </span><br><span class="line">X0 = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_inputs])</span><br><span class="line">X1 = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_inputs])</span><br><span class="line"> </span><br><span class="line">Wx = tf.Variable(tf.random_normal(shape=[n_inputs, n_neurons], dtype=tf.float32))</span><br><span class="line">Wy = tf.Variable(tf.random_normal(shape=[n_neurons, n_neurons], dtype=tf.float32))</span><br><span class="line">b = tf.Variable(tf.zeros([<span class="number">1</span>, n_neurons], dtype=tf.float32))</span><br><span class="line"> </span><br><span class="line">Y0 = tf.tanh(tf.matmul(X0, Wx) + b)</span><br><span class="line">Y1 = tf.tanh(tf.matmul(Y0, Wy) + tf.matmul(X1, Wx) + b)</span><br><span class="line"> </span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"> </span><br><span class="line">X0_batch = np.array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>], [<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>], [<span class="number">9</span>, <span class="number">0</span>, <span class="number">1</span>]])</span><br><span class="line">X1_batch = np.array([[<span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>], [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>], [<span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]])</span><br><span class="line"> </span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    init.run()</span><br><span class="line">    Y0_val, Y1_val = sess.run([Y0, Y1], feed_dict=&#123;X0: X0_batch, X1: X1_batch&#125;)</span><br><span class="line"> </span><br><span class="line">print(Y0_val)</span><br><span class="line">print(Y1_val)</span><br></pre></td></tr></table></figure>
+<p>In TF, there is a static_rnn () function that can generate unrolled RNNs by connecting cells. The generated code is as follows:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">X0 = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_inputs])</span><br><span class="line">X1 = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_inputs])</span><br><span class="line"> </span><br><span class="line">basic_cell = tf.contrib.rnn.BasicRNNCell(num_units=n_neurons)</span><br><span class="line">output_seqs, states = tf.contrib.rnn.static_rnn(basic_cell, [X0, X1], dtype=tf.float32)</span><br><span class="line">Y0, Y1 = output_seqs</span><br></pre></td></tr></table></figure>
+<p>The network structure generated by this code is consistent with the network function of the previous paragraph. First created a BasicRNNCell, and then copied this BasicRNNCell to form an unrolled RNN. Then call static_rnn () and pass in the BasicRNNCell, the input tensor, and the data types of the input parameters. These parameters are used to generate the initial state matrix, which defaults to 0. static_rnn () will return two objects: the first object is a list containing the output tensors at each moment; the second object is a tensor containing the final state of the network. When you use basic cells, this final state can be understood as the last output.</p>
+<p>In order to build RNNs more conveniently, instead of defining tensor for input and output once at each moment, we can use the following code to implement an RNN:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">X = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_steps, n_inputs])</span><br><span class="line">X_seqs = tf.unstack(tf.transpose(X, perm=[<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>]))</span><br><span class="line">basic_cell = tf.contrib.rnn.BasicRNNCell(num_units=n_neurons)</span><br><span class="line">output_seqs, states = tf.contrib.rnn.static_rnn(basic_cell, X_seqs, dtype=tf.float32)</span><br><span class="line">outputs = tf.transpose(tf.stack(output_seqs), perm=[<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>])</span><br></pre></td></tr></table></figure>
+<p>The first line of code first creates a tensor whose data type is float32 and shape is a list. The first dimension is the size of the mini-batch, followed by a list of input sequences it extracts at each moment. X_seqs is a list of n_steps tensors with shape [None, n_inputs]. Then generate basic_cell and get output_seqs, states. Finally, change the shape of the outputs tensor to [None, n_steps, n_neurons].</p>
+<p>Now, a single tensor containing all mini-batch sequences can be input into the network:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">X_batch = np.array([</span><br><span class="line">    <span class="comment"># t = 0    t = 1</span></span><br><span class="line">    [[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>], [<span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>]], <span class="comment"># instance 0</span></span><br><span class="line">    [[<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>], [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]], <span class="comment"># instance 1</span></span><br><span class="line">    [[<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>], [<span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>]], <span class="comment"># instance 2</span></span><br><span class="line">    [[<span class="number">9</span>, <span class="number">0</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]], <span class="comment"># instance 3</span></span><br><span class="line">])</span><br><span class="line"> </span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    init.run()</span><br><span class="line">    outputs_val = outputs.<span class="built_in">eval</span>(feed_dict=&#123;X: X_batch&#125;)</span><br></pre></td></tr></table></figure>
+<p>However, this static way still can only build a graph containing all cells for each moment. If there are 50 moments, the code is still verbose. The more serious problem is that if you use the GPU, as the graph grows, OOM problems are likely to occur in the BP process. Therefore, a dynamic_rnn () method is provided in TF.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_steps, n_inputs])</span><br><span class="line"> </span><br><span class="line">basic_cell = tf.contrib.rnn.BasicRNNCell(num_units=n_neurons)</span><br><span class="line">outputs, states = tf.nn.dynamic_rnn(basic_cell, X, dtype=tf.float32)</span><br></pre></td></tr></table></figure>
+<p>The dynamic_rnn () method in the code uses a while_loop () to run all cells at all times. In addition, you can swap GPU and CPU storage by setting swap_memory = True to avoid OOM during BP.</p>
+<h2 id="4-Train-RNNs"><a href="#4-Train-RNNs" class="headerlink" title="4. Train RNNs"></a>4. Train RNNs</h2><p>Generally speaking, training RNNs needs to be implemented using backpropagation through time (BPTT). In the BP process, the loss function calculates the return gradient of the output sequence, and then returns the gradient BP to the entire network. Even if the output sequence selects only a part of all the outputs, the gradient calculated by the loss function will BP the entire network.</p>
+<p>Just like the ordinary BP process, first it is a forward propagation through an unrolled network, and then the loss sequence is used to evaluate the output sequence. Then, the loss gradient is back-propagated and finally the model parameters are updated through the BPTT gradient. Taking the MNIST data set as an example, if each picture is taken as a 28 * 28 sequence, it can be classified using RNN. We set 150 neurons, and add an FC layer containing 10 neurons after the output at the last moment, so that each neuron corresponds to an output. Finally, a softmax layer is used to achieve the final multi-classification.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow.contrib.layers <span class="keyword">import</span> fully_connected</span><br><span class="line"><span class="keyword">from</span> tensorflow.examples.tutorials.mnist <span class="keyword">import</span> input_data</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">n_steps = <span class="number">28</span></span><br><span class="line">n_inputs = <span class="number">28</span></span><br><span class="line">n_neurons = <span class="number">150</span></span><br><span class="line">n_outputs = <span class="number">10</span></span><br><span class="line"> </span><br><span class="line">learning_rate = <span class="number">0.001</span></span><br><span class="line"> </span><br><span class="line">X = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_steps, n_inputs])</span><br><span class="line">y = tf.placeholder(tf.int32, [<span class="literal">None</span>])</span><br><span class="line"> </span><br><span class="line">basic_cell = tf.contrib.rnn.BasicRNNCell(num_units=n_neurons)</span><br><span class="line">outputs, states = tf.nn.dynamic_rnn(basic_cell, X, dtype=tf.float32)</span><br><span class="line"> </span><br><span class="line">logits = fully_connected(states, n_outputs, activation_fn=<span class="literal">None</span>)</span><br><span class="line">xentropy = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y, logits=logits)</span><br><span class="line">loss = tf.reduce_mean(xentropy)</span><br><span class="line">optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)</span><br><span class="line">training_op = optimizer.minimize(loss)</span><br><span class="line">correct = tf.nn.in_top_k(logits, y, <span class="number">1</span>)</span><br><span class="line">accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))</span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"> </span><br><span class="line">mnist = input_data.read_data_sets(<span class="string">&#x27;/tmp/data/&#x27;</span>)</span><br><span class="line">X_test = mnist.test.images.reshape((-<span class="number">1</span>, n_steps, n_inputs))</span><br><span class="line">y_test = mnist.test.labels</span><br><span class="line"> </span><br><span class="line">n_epochs = <span class="number">100</span></span><br><span class="line">batch_size = <span class="number">150</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    init.run()</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(n_epochs):</span><br><span class="line">        <span class="keyword">for</span> iteration <span class="keyword">in</span> <span class="built_in">range</span>(mnist.train.num_examples // batch_size):</span><br><span class="line">            X_batch, y_batch = mnist.train.next_batch(batch_size)</span><br><span class="line">            X_batch = X_batch.reshape((-<span class="number">1</span>, n_steps, n_inputs))</span><br><span class="line">            sess.run(training_op, feed_dict=&#123;X: X_batch, y: y_batch&#125;)</span><br><span class="line">        acc_train = accuracy.<span class="built_in">eval</span>(feed_dict=&#123;X: X_batch, y: y_batch&#125;)</span><br><span class="line">        acc_test = accuracy.<span class="built_in">eval</span>(feed_dict=&#123;X: X_test, y: y_test&#125;)</span><br><span class="line">        print(epoch, <span class="string">&#x27;Train accuracy:&#x27;</span>, acc_train, <span class="string">&#x27;Test accuracy:&#x27;</span>, acc_test)</span><br></pre></td></tr></table></figure>
+<p>Although the above code can get better classification results, the main application scenario of RNN is still processing real serialized data. For example, the stock price is predicted through the change of the stock price over time. Now create an RNN containing 100 recurrent neurons. The length of each training data is 20, so we set 20 time steps. Each input is the price of the stock at that moment.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Training to Predict Time Series</span></span><br><span class="line">n_steps = <span class="number">20</span></span><br><span class="line">n_inputs = <span class="number">1</span></span><br><span class="line">n_neurons = <span class="number">100</span></span><br><span class="line">n_outputs = <span class="number">1</span></span><br><span class="line"> </span><br><span class="line">X = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_steps, n_inputs])</span><br><span class="line">y = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_steps, n_outputs])</span><br><span class="line"><span class="comment"># cell = tf.contrib.rnn.BasicRNNCell(num_units=n_neurons, activation=tf.nn.relu)</span></span><br><span class="line">cell = tf.contrib.rnn.OutputProjectionWrapper(</span><br><span class="line">    tf.contrib.rnn.BasicRNNCell(num_units=n_neurons, activation=tf.nn.relu),</span><br><span class="line">    output_size=n_outputs</span><br><span class="line">)</span><br><span class="line">outputs, states = tf.nn.dynamic_rnn(cell, X, dtype=tf.float32)</span><br><span class="line"> </span><br><span class="line">learning_rate = <span class="number">0.001</span></span><br><span class="line"> </span><br><span class="line">loss = tf.reduce_mean(tf.square(outputs - y))</span><br><span class="line">optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)</span><br><span class="line">training_op = optimizer.minimize(loss)</span><br><span class="line"> </span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"> </span><br><span class="line">n_iterations = <span class="number">10000</span></span><br><span class="line">batch_size = <span class="number">50</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    init.run()</span><br><span class="line">    <span class="keyword">for</span> iteration <span class="keyword">in</span> <span class="built_in">range</span>(n_iterations):</span><br><span class="line">        X_batch, y_batch = stock.train.next_batch(batch_size)</span><br><span class="line">        sess.run(training_op, feed_dict=&#123;X: X_batch, y: y_batch&#125;)</span><br><span class="line">        <span class="keyword">if</span> iteration % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">            mse = loss.<span class="built_in">eval</span>(feed_dict=&#123;X: X_batch, y: y_batch&#125;)</span><br><span class="line">            print(iteration, <span class="string">&quot;\tMSE:&quot;</span>, mse)</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-Deep-RNNs"><a href="#5-Deep-RNNs" class="headerlink" title="5. Deep RNNs"></a>5. Deep RNNs</h2><p>Like other types of networks, RNNs can also implement deep RNNs by implementing more layers of cells. It is very convenient to implement deep RNN in TensorFlow. You only need to create multiple cells, and then integrate independent cells together through the MultiRNNCell method.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">n_neurons = <span class="number">100</span></span><br><span class="line">n_layers = <span class="number">3</span></span><br><span class="line"> </span><br><span class="line">basic_cell = tf.contrib.rnn.BasicRNNCell(num_units=n_neurons)</span><br><span class="line">multi_layer_cell = tf.contrib.rnn.MultiRNNCell([basic_cell] * n_layers)</span><br><span class="line">outputs, states = tf.nn.dynamic_rnn(multi_layer_cell, X, dtype=tf.float32)</span><br></pre></td></tr></table></figure>
+<p>The state at this time is a tuple that contains a tensor for each layer. The tensor represents the final state of the cells in this layer. If you set state_is_tuple = False when using MultiRNNCell, state will concatenate the states of the three layers to become a tensor.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2017/11/10/Recurrent-Neural-Networks/" data-id="cklq3auya0002c4j58wq0eapm" data-title="Recurrent Neural Networks" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/28/Some-Special-Backpropagation-in-Neural-Networks/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Some Special Backpropagation in Neural Networks
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/05/24/Linear-Regression-and-Gradient-Descent/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Linear Regression and Gradient Descent</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/28/Some-Special-Backpropagation-in-Neural-Networks/">Some Special Backpropagation in Neural Networks</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/10/Recurrent-Neural-Networks/">Recurrent Neural Networks</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/24/Linear-Regression-and-Gradient-Descent/">Linear Regression and Gradient Descent</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

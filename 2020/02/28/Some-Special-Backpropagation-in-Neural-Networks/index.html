@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Some Special Backpropagation in Neural Networks | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="MathJax.Hub.Config({             tex2jax: {             skipTags: [&#39;script&#39;, &#39;noscript&#39;, &#39;style&#39;, &#39;textarea&#39;, &#39;pre&#39;],             inlineMath: [[&#39;$&#39;,&#39;$&#39;]]             }         });">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Some Special Backpropagation in Neural Networks">
+<meta property="og:url" content="http://example.com/2020/02/28/Some-Special-Backpropagation-in-Neural-Networks/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="MathJax.Hub.Config({             tex2jax: {             skipTags: [&#39;script&#39;, &#39;noscript&#39;, &#39;style&#39;, &#39;textarea&#39;, &#39;pre&#39;],             inlineMath: [[&#39;$&#39;,&#39;$&#39;]]             }         });">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-02-28T13:06:37.000Z">
+<meta property="article:modified_time" content="2021-02-18T06:12:02.410Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Some-Special-Backpropagation-in-Neural-Networks" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/28/Some-Special-Backpropagation-in-Neural-Networks/" class="article-date">
+  <time class="dt-published" datetime="2020-02-28T13:06:37.000Z" itemprop="datePublished">2020-02-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Some Special Backpropagation in Neural Networks
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
+
+
+<p>In neural networks, the loss is obtained during training and parameters in networks are updated via the <strong><em>backpropagation through time (BPTT)</em></strong> . However, there are some special scenarios in networks which may demand us to contemplate this particular processing again. This article is to share some ubiquitous but also tricky situations in networks apropos processing the backpropagation.</p>
+<h2 id="1-ReLU"><a href="#1-ReLU" class="headerlink" title="1. ReLU"></a>1. ReLU</h2><p>As an activation function to avoid the <em>vanishing gradients</em> problem, <em>ReLU</em> is designed as a continuous but local non-differentiable function:<br>$$<br>ReLU(x)=<br>\begin{cases}<br>x, \quad x &gt; 0<br>\\0, \quad x \leq 0<br>\end{cases}<br>$$<br>When we attempt to differentiate this function, we de facto artificially specify that the derivative of ReLU at $x=0$ is 1 to make it easier for us to implement it in engineering now that ReLU is not differentiable at $x=0$. Therefore, the derivative of ReLU is:<br>$$<br>ReLU^{‘}(x)=<br>\begin{cases}<br>1, \quad x \geq 0<br>\\0, \quad x &lt; 0<br>\end{cases}<br>$$</p>
+<h2 id="2-Pooling"><a href="#2-Pooling" class="headerlink" title="2. Pooling"></a>2. Pooling</h2><p>Pooling layers in CNNs are not differentiable on the grounds that the pooling process diminish the size of the feature map. For example, a $2 \times 2$ pooling layer dinimishs the feature map from 64 at $layer_{(i+1)}$ to 16 at $layer_{(i)}$, then the amount of gradients in BPTT are 16 at $layer_{(i+1)}$ but 64 at $layer_{(i)}$. In order to acclimate BPTT to this special scenario, we divide each gradient value and then consign them to the last layer to meet its size. However, the loss should be congruent before and after this process to shirk the potential risk of exploding gradients problem.  </p>
+<h3 id="2-1-Mean-Pooling"><a href="#2-1-Mean-Pooling" class="headerlink" title="2.1 Mean Pooling"></a>2.1 Mean Pooling</h3><p>Mean pooling is a tricky part in CNN now that some people thought that gradients should be allocated to each input. Yet in order to avoid the exploding gradient problem, the gradient should be same before and after going through the mean pooling layer. Thus, if a $2 \times 2$ pooling layer diminishes a feature map from 64 at $layer_{(i)}$ to 16 at $layer_{(i+1)}$, the gradient should times $frac{1}{4}$ during the backpropagation.</p>
+<h3 id="2-2-Max-Pooling"><a href="#2-2-Max-Pooling" class="headerlink" title="2.2 Max Pooling"></a>2.2 Max Pooling</h3><p>Max pooling returns only the maximum in the window so that only those ‘working’ feature maps can get the gradient during the backpropagation.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/28/Some-Special-Backpropagation-in-Neural-Networks/" data-id="cklq3auy80001c4j5fmig59rt" data-title="Some Special Backpropagation in Neural Networks" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/11/10/Recurrent-Neural-Networks/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Recurrent Neural Networks</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/28/Some-Special-Backpropagation-in-Neural-Networks/">Some Special Backpropagation in Neural Networks</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/10/Recurrent-Neural-Networks/">Recurrent Neural Networks</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/24/Linear-Regression-and-Gradient-Descent/">Linear Regression and Gradient Descent</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
