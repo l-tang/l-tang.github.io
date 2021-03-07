@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="That&#39;s the reason why reco-based product rely on Product-based Neural Networks, Li Tang&#39;s Blog">
+    <meta name="keywords" content="AFM: A More General FM Model with Attention, Li Tang&#39;s Blog">
     <meta name="description" content="Li Tang&#39;s personal blog.">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>That&#39;s the reason why reco-based product rely on Product-based Neural Networks | Li Tang&#39;s Blog</title>
+    <title>AFM: A More General FM Model with Attention | Li Tang&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">That&#39;s the reason why reco-based product rely on Product-based Neural Networks</h1>
+                    <h1 class="description center-align post-title">AFM: A More General FM Model with Attention</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/PNN/">
-                                <span class="chip bg-color">PNN</span>
+                            <a href="/tags/AFM/">
+                                <span class="chip bg-color">AFM</span>
                             </a>
                         
                     </div>
@@ -481,16 +481,17 @@
     </script>
 </head>
 
-
-<p>2016年SJTU与UCL合作了一篇论文《<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1611.00144.pdf">Product-based Neural Networks for User Response Prediction</a>》，这篇文章提出了FM和FNN等CTR预估算法的局限性，试图通过在神经网络中引入product layer来解决特征之间交互的问题，并命名为Product-based Neural Networks，积基神经网络。论文发表之后，product layer逐渐成为CTR预估模型中的常见配置，算是众多rank模型中的一个经典款。</p>
-<h1 id="FM与FNN的局限性"><a href="#FM与FNN的局限性" class="headerlink" title="FM与FNN的局限性"></a>FM与FNN的局限性</h1><p>FM与FNN通过对特种组合的latent vector的挖掘，很大程度上改善了早先需要人工特征工程的问题。但是FNN虽然是将FM的特征组合能力与神经网络进行了结合，但这种“加法操作”对于多个类别的离散特征之间的关联挖掘或许并不是最好的方式。因此PNN的作者提出了product layer，通过求积操作来表现特征之间的关联。</p>
-<h1 id="积基神经网络PNN"><a href="#积基神经网络PNN" class="headerlink" title="积基神经网络PNN"></a>积基神经网络PNN</h1><h2 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h2><p>PNN的网络结构是由embedding layer，product layer，hidden layers以及output layer构成的。从原论文中给出的结构图中可以看出，product layer分为$z$和$p$两部分，输出分别记作线性信号$l_z$和二次信号$l_p$。<br><img src="https://img-blog.csdnimg.cn/20200904105746628.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dpdGh1Yl8zODMyNTg4NA==,size_16,color_FFFFFF,t_70#pic_center" alt=" Product-based Neural Network Architecture."><br>图中的$l_z$是$f$与$1$做运算，因此就是embedding layer的结果直接复制而来，目的是为了保留线性特征，而$l_p$则是对embedding layer的结果两两组和求积得到的。根据$l_p$使用的求积方式的不同，PNN又被细分为Inner Product-based Neural Network(IPNN)和Outer Product-based Neural Network(OPNN)。</p>
-<p>在得到$l_z$与$l_p$的结果之后，连接它们并送入hidden layer L1，输出记作$l_1$。这里一般使用ReLU作为激活函数，即$l_1=relu(l_z+l_p+b_1)$。原论文的结构图中给出的hidden layers是两层FC，实际应用中可以根据情况自行调节。构建时只需要将每个FC layer的结果送入下一层即可，如$l_2=relu(W_2l_1+b_2)$。通过所有hidden layers之后，将最后的结果通过一个output layer得到最终的CTR预估结果。以论文中的两层FC为例，最终的output layer应该表示为$\hat{y}=\sigma(W_3l_2+b_3)$。</p>
-<p>可以看出整个PNN的网络结构非常清晰简洁，最重要的就是$l_p$部分的求解。</p>
-<h2 id="IPNN"><a href="#IPNN" class="headerlink" title="IPNN"></a>IPNN</h2><p>IPNN线性信号部分的处理是，将$z$与权重矩阵$W^n_z$进行内积运算，其中$n$是输入特征的field数，因此有$$l_z=(l_z^1, l_z^2, …, l_z^n, …, l_z^{D_1}),$$其中$l_z^n = W_z^n\odot z$。内积运算的定义为$A\odot B\triangleq\sum_{i,j}A_{i,j}B_{i,j}$，因此对于线性信息$z$及其权重矩阵$W^n_z$有$$l_z^n = W_z^n\odot z = \sum_{i=1}^N\sum_{j=1}^M (W_z^n)<em>{i,j}z</em>{i,j},$$其中$M$是embedding之后的维度值。对于二次信号部分，$l_p^n=\sum_{i=1}^N\sum_{j=1}^N (W_p^n)<em>{i,j}p</em>{i,j}$，这里的$p$和$W^n_p$都是对称的。</p>
-<p>按照上面的方式进行连接之后，神经网络的复杂度会很高。$l_1=relu(l_z+l_p+b_1)$在求解时，空间复杂度为$O(D_1N(M+N))$，时间复杂度为$O(N^2(D_1+M))$。论文受到FM的启发，使用矩阵分解降低模型的复杂度。假设$W_p^n=\theta ^n {\theta ^n}^T$，$l_1$的求解可以被化简为$$W_p^n\odot p=\sum_{i=1}^N\sum_{j=1}^N\theta _i^n\theta <em>j^n\langle f_i, f_j\rangle=\langle\sum</em>{i=1}^N\delta_i^n,\sum_{i=1}^N\delta_i^n\rangle,$$其中$\delta_i^n=\theta_i^nf_i$。因此，$l_p$部分的求解就变成了$l_p=(\parallel\sum_i\delta_i^1\parallel, …, \parallel\sum_i\delta_i^n\parallel, …, \parallel\sum_i\delta_i^{D_1}\parallel)$。原本参数量为$N\times N$的矩阵$W_p^n$被分解为大小为$N$的向量$\theta^n$，从而使$l_p$部分的空间复杂度和时间复杂度都降为$O(D_1MN)$。</p>
-<h2 id="OPNN"><a href="#OPNN" class="headerlink" title="OPNN"></a>OPNN</h2><p>OPNN与IPNN的区别是，IPNN对每对特征向量运算之后返回标量，而OPNN则是生成矩阵。在IPNN中，$l_p^n=\sum_{i=1}^N\sum_{j=1}^N (W_p^n)<em>{i,j}p</em>{i,j}$，这里的$p_{i,j}$是一个值，因此$p$是一个大小为$N\times N$的矩阵。而在OPNN中，$p_{i,j}=f_if_j^T$，此时对于任意一个$p_{i,j}$而言，都是一个$M\times M$的矩阵。因此OPNN的时间复杂度与空间复杂度，都是$O(D_1M^2N^2)$。为了降低OPNN的复杂度，PNN的作者提出了一个<em>superposition</em>。</p>
-<p>作者定义$f_\Sigma=\sum_{i=1}^Nf_i$，从而重定义了二次信号部分$p=\sum_{i=1}^N\sum_{j=1}^Nf_if_j^T=f_\Sigma(f_\Sigma)^T$。此时，$p$本身就是一个$M\times M$的矩阵了，同理$W_p$的大小也是$M\times M$。这时的$l_p$部分的时间复杂度与空间复杂度再次被降低为$O(D_1M^2)$。</p>
+<h1 id="FM的应用"><a href="#FM的应用" class="headerlink" title="FM的应用"></a>FM的应用</h1><p>由于LR在特征工程上的高昂成本，具有隐性特征交叉向量的FM(<a target="_blank" rel="noopener" href="https://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf">Factorization Machines</a>)成为挖掘二阶特征组合的CTR预估。FM的核心思路是，为每一个特征设置一个隐向量，根据该向量的值来表示该特征与其他特征之间的关系。对于任意两个特征的组合，只需要求出两个隐向量的内积即可得到其权重值。</p>
+<p>FM在CTR预估作业上的潜力被不断挖掘，先是FFM(<a target="_blank" rel="noopener" href="https://www.csie.ntu.edu.tw/~cjlin/papers/ffm.pdf">Field-aware Factorization Machines</a>)提出了“field”概念。原始的FM是每个特征只有一个隐向量$\boldsymbol w_i$，而FFM则认为特征应该被分为不同的field，如果一共被分为$n$个不同field的话，每个特征就应该具备$n$个不同的隐向量。当两个特征进行组合时，将参与内积运算的应该是每个特征对应对方field的向量，比如两个特征分别为特征$i$和$j$，则它们所处的field分别记作$f_i$和$f_j$。此时交叉特征的权重为$\boldsymbol{w}_{i,f_j}\boldsymbol{w}_{j,f_i}$。</p>
+<p>在Wide&amp;Deep取得成功后，FM也被集成进DNN模型。DeepFM就是使用FM对特征进行embedding，之后再将embedding结果与DNN共享，使DNN学习更为高阶的特征组合特性。</p>
+<h1 id="Attention机制"><a href="#Attention机制" class="headerlink" title="Attention机制"></a>Attention机制</h1><p>Attention机制的核心就是为不同特征的组合分配权重系数。在NLP和CV的任务中，attention机制都取得了巨大的成功。在推荐系统中，attention机制也被不断尝试与DNN进行结合，比如DIN(<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1706.06978.pdf">Deep Interest Network</a>)就是通过注意力机制对用户的历史兴趣进行有侧重的利用与挖掘。由于认为FM对于各个特征组合的结果进行等权重加和的设定较为朴素，AFM为每个特征组合设定了一个注意力得分，相当于是“权重的权重”。</p>
+<h1 id="AFM"><a href="#AFM" class="headerlink" title="AFM"></a>AFM</h1><p>AFM(<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1708.04617.pdf">Attentional Factorization Machines</a>)是2017年ZJU和NUS合作发表在IJCAI上面的论文，相比于其他FM相关的模型，AFM提供了基于注意力机制的池化层，通过注意力得分为每组特征组合分配权重，从而突出对CTR影响最大的特征组合情况。</p>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><p><img src="https://img-blog.csdnimg.cn/20200901184254356.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dpdGh1Yl8zODMyNTg4NA==,size_16,color_FFFFFF,t_70#pic_center" alt="Figure 1: The neural network architecture of our proposed Attentional Factorization Machine model."><br>由上图可知，AFM的模型内部存在两个比较核心的部分，一个是embedding后的Pair-wise Interaction Layer，另一个是用来训练注意力得分的Attention Network。</p>
+<h3 id="Pair-wise-Interaction-Layer"><a href="#Pair-wise-Interaction-Layer" class="headerlink" title="Pair-wise Interaction Layer"></a>Pair-wise Interaction Layer</h3><p>AFM给出了一种特征间的新的pair-wise interaction。如果将特征向量$x$中的非零特征组成的集合记作$\mathcal{X}$，将embedding layer所有输出记作$\varepsilon={\boldsymbol v_ix_i}<em>{i\in\mathcal{X}}$，则pair-wise interaction layer的输出则可以表示为向量集合：$$f</em>{PI}(\varepsilon)={(\boldsymbol{v}<em>i\odot \boldsymbol{v}<em>j)x_ix_j}</em>{(i,j)\in\mathcal{R}_x},$$其中$\odot$表示两个向量的element-wise product，$\mathcal{R}_x={(i,j)}</em>{i\in\mathcal{X},j\in\mathcal{X},j&gt;i}$，即所有非零特征的组合。通过定义pair-wise interaction layer，FM可以使用神经网络的结构进行表示。首先将$f_{PI}(\varepsilon)$送入sum pooling，之后通过FC layer将结果映射为预测分数：$$\hat{y}=\boldsymbol{p}^T\sum_{(i,j)\in\mathcal{R}_x}(\boldsymbol{v}_i\odot \boldsymbol{v}_j)x_ix_j+b,$$其中$\boldsymbol{p}\in\mathbb{R}^k$与$b\in\mathbb{R}$分别表示prediction layer的权重与偏差。当$\boldsymbol p$取$\boldsymbol 1$并且$b$取0的时候，上式即为一般形式的FM。</p>
+<h3 id="Attention-based-Pooling-Layer"><a href="#Attention-based-Pooling-Layer" class="headerlink" title="Attention-based Pooling Layer"></a>Attention-based Pooling Layer</h3><p>Attention机制的核心思想是，FM中不同的特征组合在统一表示时也应当对结果产生不同贡献。不同于FM的直接求和，AFM在特征交叉部分引入了attention实现了权重求和：$$f_{Att}(f_{PI}(\varepsilon))=\sum_{(i,j)\in\mathcal{R}<em>x}a</em>{ij}(\boldsymbol{v}<em>i\odot \boldsymbol{v}<em>j)x_ix_j,$$其中$a</em>{ij}$是特征组合$\hat{w}</em>{ij}$的注意力得分，即$\hat{w}<em>{ij}$对于目标预测的重要性。通常，要计算$a</em>{ij}$，最先想到的方式可能是直接通过最小化预测损失来学习$a_{ij}$的值，这在工程上也确实是可行的。但是这样做的问题在于，相比于LR，FM的一大优势是特征组合的权重学习不要求该组合在训练集上共现，而这一做法对于没有共现的特征组合是无法学习到注意力得分的。为了解决这个问题，AFM的作者设计了一个multi-layer perceptron(MLP)，即attention network，将交叉特征的向量作为输入。定义attention network为：$$a’<em>{ij}=\boldsymbol{h}^TReLU(\boldsymbol{W}(\boldsymbol{v}_i\odot \boldsymbol{v}_j)x_ix_j+\boldsymbol b),$$$$a</em>{ij}=\frac{exp(a’<em>{ij})}{\sum</em>{(i,j)\in\mathcal{R}<em>x}exp(a’</em>{ij})},$$其中$\boldsymbol{W}\in\mathbb{R}^{t\times k},  \boldsymbol{b}\in\mathbb{R}^t, \boldsymbol{h}\in\mathbb{R}^t$都是模型参数，$t$是attention factor，表示attention network的隐层大小。注意力得分最终通过softmax函数进行归一化。基于AFM作者的实践，ReLU作为激活函数表现很好。</p>
+<p>Attention-based pooling layer的输出是一个将所有特征组合通过重要性压缩得到的$k$维向量。AFM模型的完整模型公式可以表示为：$$\hat{y}<em>{AFM}=(x)=w_0+\sum^n_{i=1}w_ix_i+\boldsymbol{p}^T\sum^n</em>{i=1}\sum^n_{j=i+1}a_{ij}(\boldsymbol{v}<em>i\odot \boldsymbol{v}<em>j)x_ix_j,$$其中$a</em>{ij}$已经在前面定义，模型包含参数为$\Theta={w_0, {w_i}^n</em>{i=1},{\boldsymbol{v}<em>i}^n</em>{i=1}, \boldsymbol{p}, \boldsymbol{W}, \boldsymbol{b}, \boldsymbol{h}}$。</p>
+<h2 id="学习方式"><a href="#学习方式" class="headerlink" title="学习方式"></a>学习方式</h2><p>AFM直接从数据建模方向上对FM进行了提升，可以被直接应用于多种预测任务，如回归，分类，以及排序。不同的任务类型需要不同的目标函数。对于预测值为实数的回归任务，常见的目标函数是均方误差：$$L_r=\sum_{x\in\tau}(\hat{y}<em>{AFM}(\boldsymbol{x})-y(\boldsymbol{x}))^2,$$其中$\tau$表示训练集，对于二分类问题或者隐式反馈的推荐任务，可以最小化log loss。通过TF等常见框架的AutoDiff功能即可实现$\hat{y}</em>{AFM}(\boldsymbol{x})$部分的SGD，从而完成学习。</p>
+<h3 id="防止过拟合"><a href="#防止过拟合" class="headerlink" title="防止过拟合"></a>防止过拟合</h3><p>AFM在pair-wise interaction layer部署了dropout，在attention network加入了$L_2$正则，此时attention network部分的目标函数变为：$$L_r=\sum_{x\in\tau}(\hat{y}_{AFM}(\boldsymbol{x})-y(\boldsymbol{x}))^2+\lambda\left|\boldsymbol W\right|^2,$$其中$\lambda$是正则项的权重。AFM并没有在attention network部分使用dropout，其作者解释为在pair-wise interaction layer以及attention network都部署dropout后会引入一些稳定性问题，同时模型表现会受到影响。</p>
 
                 
             </div>
@@ -517,7 +518,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://l-tang.github.io/2021/03/07/That-s-the-reason-why-reco-based-product-rely-on-Product-based-Neural-Networks/">http://l-tang.github.io/2021/03/07/That-s-the-reason-why-reco-based-product-rely-on-Product-based-Neural-Networks/</a>
+                    <a href="http://l-tang.github.io/2021/03/07/AFM-A-More-General-FM-Model-with-Attention/">http://l-tang.github.io/2021/03/07/AFM-A-More-General-FM-Model-with-Attention/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -555,8 +556,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/PNN/">
-                                    <span class="chip bg-color">PNN</span>
+                                <a href="/tags/AFM/">
+                                    <span class="chip bg-color">AFM</span>
                                 </a>
                             
                         </div>
@@ -728,9 +729,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
                 <a href="/2021/03/07/AFM-A-More-General-FM-Model-with-Attention/">
                     <div class="card-image">
@@ -748,9 +750,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-07
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-07
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -759,6 +761,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -777,13 +780,13 @@
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/02/28/Some-Special-Backpropagation-in-Neural-Networks/">
+                <a href="/2021/03/07/That-s-the-reason-why-reco-based-product-rely-on-Product-based-Neural-Networks/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="Some Special Backpropagation in Neural Networks">
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="That&#39;s the reason why reco-based product rely on Product-based Neural Networks">
                         
-                        <span class="card-title">Some Special Backpropagation in Neural Networks</span>
+                        <span class="card-title">That&#39;s the reason why reco-based product rely on Product-based Neural Networks</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -794,7 +797,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-07
                             </span>
                         <span class="publish-author">
                             
@@ -807,8 +810,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Backpropagation/">
-                        <span class="chip bg-color">Backpropagation</span>
+                    <a href="/tags/PNN/">
+                        <span class="chip bg-color">PNN</span>
                     </a>
                     
                 </div>
