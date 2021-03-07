@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Recurrent Neural Networks, Hexo">
+    <meta name="keywords" content="Recurrent Neural Networks, Li Tang&#39;s Blog">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Recurrent Neural Networks | Hexo</title>
+    <title>Recurrent Neural Networks | Li Tang&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -43,7 +43,7 @@
                     
                     <img src="/medias/logo.png" class="logo-img" alt="LOGO">
                     
-                    <span class="logo-span">Hexo</span>
+                    <span class="logo-span">Li Tang&#39;s Blog</span>
                 </a>
             </div>
             
@@ -142,7 +142,7 @@
         
         <img src="/medias/logo.png" class="logo-img circle responsive-img">
         
-        <div class="logo-name">Hexo</div>
+        <div class="logo-name">Li Tang&#39;s Blog</div>
         <div class="logo-desc">
             
             Never really desperate, only the lost of the soul.
@@ -429,9 +429,13 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/RNN/">
+                                <span class="chip bg-color">RNN</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -480,7 +484,7 @@
 
 <p><strong><em>Recurrent Neural Networks (RNNs)</em></strong> can be used for prediction. It can analyze time series data such as stock prices and tell you when you should buy/sell. It is also possible to predict the trajectory of the vehicle in an automatic driving system, thereby avoiding traffic accidents. Unlike many other neural networks, the length of input sequence for RNNs is flexible. In this way, you can replace RNNs with different parameter sequences, such as an article, or an audio sample, and this is one of the reasons why RNNs often excel in the NLP line. More importantly, RNNs have the ability to predict continuous data, so it can cope with innovative tasks including automatic arrangement, text writing and so on.</p>
 <h2 id="1-Recurrent-Neurons"><a href="#1-Recurrent-Neurons" class="headerlink" title="1. Recurrent Neurons"></a>1. Recurrent Neurons</h2><p>For most neural networks, the propagation direction is basically one direction, that is, the more common feed-forward network. For RNNs, its propagation direction is bidirectional. The simplest example is to receive input $x_\left(t\right)$ from only one <strong><em>recurrent neuron</em></strong>, and the output $y_\left(t-1\right)$ of the neuron at the last moment. If we extend it in timeline, we can get the effect shown in Figure 1-1.</p>
-<p><img src="/_image/1-1.png" alt="Figure 1-1"></p>
+<p><img src="/source/_image/Recurrent-Neural-Networks/1-1.png" alt="Figure 1-1"></p>
 <p>Therefore, it is not very complex to generate a layer composed of recurrent neurons – just requires that every neuron receives $x_\left(t\right)$ and $y_\left(t-1\right)$ as the input at any time. For each recurrent neuron, there are two sets of weights: $w_x$ and $w_y$ for the input $x_\left(t\right)$ and $y_\left(t-1\right)$, so the output $y_\left(t\right)$ can be represented as:</p>
 <p>$$y_\left(t\right)=\phi\left(x^T_t \cdot w_x + y^T_\left(t-1\right) \cdot w_y + b\right)$$</p>
 <p>where $b$ is the bias term and $\Phi$ is the activation function (many researchers prefer to use <strong>hyperbolic tangent</strong> rather than ReLU in RNNs), and thus <strong>the output of the whole layer</strong> is:</p>
@@ -533,7 +537,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="/about" rel="external nofollow noreferrer">John Doe</a>
+                    <a href="/about" rel="external nofollow noreferrer">Li Tang</a>
                 </span>
             </div>
             <div class="reprint__type">
@@ -556,7 +560,7 @@
                     All articles in this blog are used except for special statements
                     <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
                     reprint polocy. If reproduced, please indicate source
-                    <a href="/about" target="_blank">John Doe</a>
+                    <a href="/about" target="_blank">Li Tang</a>
                     !
                 </span>
             </div>
@@ -580,7 +584,11 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
+                            
+                                <a href="/tags/RNN/">
+                                    <span class="chip bg-color">RNN</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -776,10 +784,18 @@
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
-                            John Doe
+                            Li Tang
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Backpropagation/">
+                        <span class="chip bg-color">Backpropagation</span>
+                    </a>
+                    
                 </div>
                 
             </div>
@@ -813,10 +829,18 @@
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
-                            John Doe
+                            Li Tang
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Linear-Regression/">
+                        <span class="chip bg-color">Linear Regression</span>
+                    </a>
+                    
                 </div>
                 
             </div>
@@ -1011,7 +1035,7 @@
                 <span id="year">2019-2021</span>
             
             <span id="year">2019</span>
-            <a href="/about" target="_blank">John Doe</a>
+            <a href="/about" target="_blank">Li Tang</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
             |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
             <br>
