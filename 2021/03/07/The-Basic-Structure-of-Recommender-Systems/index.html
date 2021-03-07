@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="AFM: A More General FM Model with Attention, Li Tang&#39;s Blog">
+    <meta name="keywords" content="The Basic Structure of Recommender Systems, Li Tang&#39;s Blog">
     <meta name="description" content="Li Tang&#39;s personal blog.">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>AFM: A More General FM Model with Attention | Li Tang&#39;s Blog</title>
+    <title>The Basic Structure of Recommender Systems | Li Tang&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -315,7 +315,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">AFM: A More General FM Model with Attention</h1>
+                    <h1 class="description center-align post-title">The Basic Structure of Recommender Systems</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/AFM/">
-                                <span class="chip bg-color">AFM</span>
+                            <a href="/tags/Recommender-System/">
+                                <span class="chip bg-color">Recommender System</span>
                             </a>
                         
                     </div>
@@ -481,17 +481,30 @@
     </script>
 </head>
 
-<h1 id="FM的应用"><a href="#FM的应用" class="headerlink" title="FM的应用"></a>FM的应用</h1><p>由于LR在特征工程上的高昂成本，具有隐性特征交叉向量的FM(<a target="_blank" rel="noopener" href="https://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf">Factorization Machines</a>)成为挖掘二阶特征组合的CTR预估。FM的核心思路是，为每一个特征设置一个隐向量，根据该向量的值来表示该特征与其他特征之间的关系。对于任意两个特征的组合，只需要求出两个隐向量的内积即可得到其权重值。</p>
-<p>FM在CTR预估作业上的潜力被不断挖掘，先是FFM(<a target="_blank" rel="noopener" href="https://www.csie.ntu.edu.tw/~cjlin/papers/ffm.pdf">Field-aware Factorization Machines</a>)提出了“field”概念。原始的FM是每个特征只有一个隐向量$\boldsymbol w_i$，而FFM则认为特征应该被分为不同的field，如果一共被分为$n$个不同field的话，每个特征就应该具备$n$个不同的隐向量。当两个特征进行组合时，将参与内积运算的应该是每个特征对应对方field的向量，比如两个特征分别为特征$i$和$j$，则它们所处的field分别记作$f_i$和$f_j$。此时交叉特征的权重为$\boldsymbol{w}_{i,f_j}\boldsymbol{w}_{j,f_i}$。</p>
-<p>在Wide&amp;Deep取得成功后，FM也被集成进DNN模型。DeepFM就是使用FM对特征进行embedding，之后再将embedding结果与DNN共享，使DNN学习更为高阶的特征组合特性。</p>
-<h1 id="Attention机制"><a href="#Attention机制" class="headerlink" title="Attention机制"></a>Attention机制</h1><p>Attention机制的核心就是为不同特征的组合分配权重系数。在NLP和CV的任务中，attention机制都取得了巨大的成功。在推荐系统中，attention机制也被不断尝试与DNN进行结合，比如DIN(<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1706.06978.pdf">Deep Interest Network</a>)就是通过注意力机制对用户的历史兴趣进行有侧重的利用与挖掘。由于认为FM对于各个特征组合的结果进行等权重加和的设定较为朴素，AFM为每个特征组合设定了一个注意力得分，相当于是“权重的权重”。</p>
-<h1 id="AFM"><a href="#AFM" class="headerlink" title="AFM"></a>AFM</h1><p>AFM(<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1708.04617.pdf">Attentional Factorization Machines</a>)是2017年ZJU和NUS合作发表在IJCAI上面的论文，相比于其他FM相关的模型，AFM提供了基于注意力机制的池化层，通过注意力得分为每组特征组合分配权重，从而突出对CTR影响最大的特征组合情况。</p>
-<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><p><img src="https://img-blog.csdnimg.cn/20200901184254356.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dpdGh1Yl8zODMyNTg4NA==,size_16,color_FFFFFF,t_70#pic_center" alt="Figure 1: The neural network architecture of our proposed Attentional Factorization Machine model."><br>由上图可知，AFM的模型内部存在两个比较核心的部分，一个是embedding后的Pair-wise Interaction Layer，另一个是用来训练注意力得分的Attention Network。</p>
-<h3 id="Pair-wise-Interaction-Layer"><a href="#Pair-wise-Interaction-Layer" class="headerlink" title="Pair-wise Interaction Layer"></a>Pair-wise Interaction Layer</h3><p>AFM给出了一种特征间的新的pair-wise interaction。如果将特征向量$x$中的非零特征组成的集合记作$\mathcal{X}$，将embedding layer所有输出记作$\varepsilon={\boldsymbol v_ix_i}<em>{i\in\mathcal{X}}$，则pair-wise interaction layer的输出则可以表示为向量集合：$$f</em>{PI}(\varepsilon)={(\boldsymbol{v}<em>i\odot \boldsymbol{v}<em>j)x_ix_j}</em>{(i,j)\in\mathcal{R}_x},$$其中$\odot$表示两个向量的element-wise product，$\mathcal{R}_x={(i,j)}</em>{i\in\mathcal{X},j\in\mathcal{X},j&gt;i}$，即所有非零特征的组合。通过定义pair-wise interaction layer，FM可以使用神经网络的结构进行表示。首先将$f_{PI}(\varepsilon)$送入sum pooling，之后通过FC layer将结果映射为预测分数：$$\hat{y}=\boldsymbol{p}^T\sum_{(i,j)\in\mathcal{R}_x}(\boldsymbol{v}_i\odot \boldsymbol{v}_j)x_ix_j+b,$$其中$\boldsymbol{p}\in\mathbb{R}^k$与$b\in\mathbb{R}$分别表示prediction layer的权重与偏差。当$\boldsymbol p$取$\boldsymbol 1$并且$b$取0的时候，上式即为一般形式的FM。</p>
-<h3 id="Attention-based-Pooling-Layer"><a href="#Attention-based-Pooling-Layer" class="headerlink" title="Attention-based Pooling Layer"></a>Attention-based Pooling Layer</h3><p>Attention机制的核心思想是，FM中不同的特征组合在统一表示时也应当对结果产生不同贡献。不同于FM的直接求和，AFM在特征交叉部分引入了attention实现了权重求和：$$f_{Att}(f_{PI}(\varepsilon))=\sum_{(i,j)\in\mathcal{R}<em>x}a</em>{ij}(\boldsymbol{v}<em>i\odot \boldsymbol{v}<em>j)x_ix_j,$$其中$a</em>{ij}$是特征组合$\hat{w}</em>{ij}$的注意力得分，即$\hat{w}<em>{ij}$对于目标预测的重要性。通常，要计算$a</em>{ij}$，最先想到的方式可能是直接通过最小化预测损失来学习$a_{ij}$的值，这在工程上也确实是可行的。但是这样做的问题在于，相比于LR，FM的一大优势是特征组合的权重学习不要求该组合在训练集上共现，而这一做法对于没有共现的特征组合是无法学习到注意力得分的。为了解决这个问题，AFM的作者设计了一个multi-layer perceptron(MLP)，即attention network，将交叉特征的向量作为输入。定义attention network为：$$a’<em>{ij}=\boldsymbol{h}^TReLU(\boldsymbol{W}(\boldsymbol{v}_i\odot \boldsymbol{v}_j)x_ix_j+\boldsymbol b),$$$$a</em>{ij}=\frac{exp(a’<em>{ij})}{\sum</em>{(i,j)\in\mathcal{R}<em>x}exp(a’</em>{ij})},$$其中$\boldsymbol{W}\in\mathbb{R}^{t\times k},  \boldsymbol{b}\in\mathbb{R}^t, \boldsymbol{h}\in\mathbb{R}^t$都是模型参数，$t$是attention factor，表示attention network的隐层大小。注意力得分最终通过softmax函数进行归一化。基于AFM作者的实践，ReLU作为激活函数表现很好。</p>
-<p>Attention-based pooling layer的输出是一个将所有特征组合通过重要性压缩得到的$k$维向量。AFM模型的完整模型公式可以表示为：$$\hat{y}<em>{AFM}=(x)=w_0+\sum^n_{i=1}w_ix_i+\boldsymbol{p}^T\sum^n</em>{i=1}\sum^n_{j=i+1}a_{ij}(\boldsymbol{v}<em>i\odot \boldsymbol{v}<em>j)x_ix_j,$$其中$a</em>{ij}$已经在前面定义，模型包含参数为$\Theta={w_0, {w_i}^n</em>{i=1},{\boldsymbol{v}<em>i}^n</em>{i=1}, \boldsymbol{p}, \boldsymbol{W}, \boldsymbol{b}, \boldsymbol{h}}$。</p>
-<h2 id="学习方式"><a href="#学习方式" class="headerlink" title="学习方式"></a>学习方式</h2><p>AFM直接从数据建模方向上对FM进行了提升，可以被直接应用于多种预测任务，如回归，分类，以及排序。不同的任务类型需要不同的目标函数。对于预测值为实数的回归任务，常见的目标函数是均方误差：$$L_r=\sum_{x\in\tau}(\hat{y}<em>{AFM}(\boldsymbol{x})-y(\boldsymbol{x}))^2,$$其中$\tau$表示训练集，对于二分类问题或者隐式反馈的推荐任务，可以最小化log loss。通过TF等常见框架的AutoDiff功能即可实现$\hat{y}</em>{AFM}(\boldsymbol{x})$部分的SGD，从而完成学习。</p>
-<h3 id="防止过拟合"><a href="#防止过拟合" class="headerlink" title="防止过拟合"></a>防止过拟合</h3><p>AFM在pair-wise interaction layer部署了dropout，在attention network加入了$L_2$正则，此时attention network部分的目标函数变为：$$L_r=\sum_{x\in\tau}(\hat{y}_{AFM}(\boldsymbol{x})-y(\boldsymbol{x}))^2+\lambda\left|\boldsymbol W\right|^2,$$其中$\lambda$是正则项的权重。AFM并没有在attention network部分使用dropout，其作者解释为在pair-wise interaction layer以及attention network都部署dropout后会引入一些稳定性问题，同时模型表现会受到影响。</p>
+<h1 id="个性化推荐系统简介"><a href="#个性化推荐系统简介" class="headerlink" title="个性化推荐系统简介"></a>个性化推荐系统简介</h1><p>个性化推荐系统是针对不同的用户进行差异化推荐的系统，目的就是帮助用户过滤掉没有兴趣的信息，为用户提供一个定制感强的信息流。其实早在移动互联网爆发以前，很多网站上就都有自己的个性化推荐系统，但是由于当时的算法，大数据，以及信息量都远不如移动互联网时代，因此大部分个性化推荐还是使用非常传统的策略，有点像是传统行业基于用户画像的营销手段。目前的个性化推荐系统，指的主要是基于机器学习和深度学习算法实现的系统。</p>
+<h2 id="传统推荐策略"><a href="#传统推荐策略" class="headerlink" title="传统推荐策略"></a>传统推荐策略</h2><p>在移动互联网普及以前，各大公司采用的推荐策略相对简单很多。因为用户的数量和用户的行为数据在体量上都远远小于移动互联网时代，并且最关键的是，那个时期还是一个主编写文章，或者头部网友做UGC的时期，商品上也往往是比较常见的品牌商品居多。所以在当时，个性化推荐往往对用户(user)的画像信息和物品(item)的画像信息进行分析，然后去做user与item的匹配。比如一个用户画像符合购买某个item的人群的统计特征，我们就会认为这个人很可能对这个item感兴趣；或者一个人看了某一篇文章，那么和这个文章有相同tag的其他文章也有可能是该用户该兴趣的文章。</p>
+<p>除了比较偏向统计的方式以外，还有一些比较算法类的推荐方式。比如通过关联规则挖掘user之间以及item之间的关联。另一种常见的挖掘user和item之间关联的方式就是通过矩阵分解的思路，这也是比较早期的嵌入(embedding)方式。</p>
+<p>当然即使对于个性化推荐系统，非个性化的热门推荐也是必不可少的。只不过在这一点上，各个产品对自家业务的理解和实际需求各不相同，所以热门推荐的类型也是五花八门。</p>
+<h2 id="信息过载"><a href="#信息过载" class="headerlink" title="信息过载"></a>信息过载</h2><p>当移动互联网普及以后，信息过载的现象愈发严重，传统推荐策略的问题逐渐显露。信息过载指的是一个app掌握了大量的可曝光信息，这些信息的数量远远大于实际需要的曝光量，因此必须要从数据库中选出很小的一部分进行曝光。如果按照传统推荐策略，依靠用户画像去做推荐，那么很多item之间的差异很难被体现出来。随着user-item的矩阵维度的上升，矩阵分解的推荐难度也在变大。因此需要使用各种手段将真正有用的信息从大量数据里快速提取出来。这一阶段的推荐策略迅速向机器学习和深度学习的方式倾斜。</p>
+<h1 id="推荐系统基本结构"><a href="#推荐系统基本结构" class="headerlink" title="推荐系统基本结构"></a>推荐系统基本结构</h1><p>目前的推荐系统，无论是电商，还是短视频，在设计上都会遵循一个比较基本的框架。大体来说，推荐部分可以看成是先对item做召回(recall)，之后再对召回的结果做一个排序(rank)。这样得到的排序结果，就是最终曝光到用户app上的结果。当然这个结构是最基本的结构，实际上每个产品的推荐系统肯定要比这个复杂的多。简单介绍一个之前参与过的新闻与视频feed流的推荐系统的大致结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">crawler(Crawler) -- Kafka --&gt; ID[Item Databases]</span><br><span class="line">UD[User Databases] --&gt; hive[Raw Data]</span><br><span class="line">ID --&gt; hive</span><br><span class="line">log[Behaviour Logs] --&gt; hive</span><br><span class="line">hive --&gt; recall(Recall Layer)</span><br><span class="line">rank --&gt; ui((UI))</span><br><span class="line">ui --Redis --&gt; rank</span><br><span class="line">ui -- Spark --&gt; hive</span><br><span class="line">recall--&gt; recall_result[Recall Result]</span><br><span class="line">request(Request) --&gt; rank(Ranking Layer)</span><br><span class="line">recall_result -- Fetch Result --&gt; rank</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>通过爬虫获取数据，使用Kafka作为消息队列(MQ)将抓取的新闻和视频放入item库中，item库，user库和behaviour库，在推荐系统中一般统称为物料库。物料库中的原始数据是基于事实得到的，未经算法处理过的原始数据，用于后续的算法推荐。</li>
+<li>召回层包含多条召回通道，每条通道根据算法或规则需要从物料库中获得相应数据，之后将各自算法或规则的输出结果作为recall result存入数据库作为离线召回候选集。</li>
+<li>排序层一般是由一到两个点击率(CTR)预估模型构成的，目的是将recall result中的大量候选item进行排序，从而保证优先曝光高CTR的item。排序层的排序结果将会反映到app的feed流中，通过在app中埋点，我们可以实时得到用户对推荐结果的反馈。比如用户是否点击了某一个曝光的item，用户在观看视频之后是否进行了分享等等。这些数据将会存入Redis作为排序层的线上实时特征，同时也会由Spark进行批量统计，生成每分钟的报表并且更新raw data中的部分数据。</li>
+</ol>
+<h2 id="物料库"><a href="#物料库" class="headerlink" title="物料库"></a>物料库</h2><p>我们的物料库使用的是Spark+Hive的形式，具体数据库的选取根据业务场景自行定义就好。物料库中的数据一般涵盖user画像信息，item画像信息，以及user behaviour log这三部分。物料库的更新并不一定要做到完全实时的流式处理，只要能满足线上推荐系统的更新要求就行。我之前做的这个推荐系统的物料库的更新可以算是是秒级延迟的微批处理，而Hive中的数据大概每10分钟才更新一次，但是这样的更新水平已经足以满足我们的算法更新需求了。新闻的规则召回以及相关新闻召回是更新频率最高的两个召回通道，也仅仅是在每小时更新一次的水平。</p>
+<h2 id="召回层"><a href="#召回层" class="headerlink" title="召回层"></a>召回层</h2><p>召回层的本质是过滤掉大量的无用信息，将海量数据过滤成几百条的候选集，从而解决排序算法无法在线遍历所有数据的问题。召回层往往包含多条召回通道，根据业务需要召回通道的逻辑也是五花八门。每一种召回算法最好可以有不同的功能，兼顾推荐系统的利用与探索两个方面。利用是指基于现有数据为用户找到他最感兴趣的相关items，特点是CTR/CVR高，或者用户的观看时间长，打分高等等。这部分推荐结果在很多指标上表现都很好，在召回通道上往往是由item CF等基于用户个人历史行为的算法来实现。探索则是为了避免过分利用导致用户的兴趣点被越推越窄，从而陷入一个局部无法接触更多的可能的情况。我们在为用户推荐时，还要考虑到如何帮助用户探索到他没有浏览过但很可能感兴趣的领域。这部分推荐结果在指标上可能不如利用型推荐结果，但是对推荐生态的整体生态健康贡献更大，比如推荐结果的多样性，用户的长期粘性等等。</p>
+<p>召回算法根据不同业务虽然差别较大，但是也有一些比较经典的方向可以参考。</p>
+<h3 id="规则召回"><a href="#规则召回" class="headerlink" title="规则召回"></a>规则召回</h3><p>规则召回可以说是最经典的推荐方式了，最简单的比如通过用户画像来判断用户最感兴趣的领域，然后将该领域的优质item推荐给该用户，或者很多论坛基于发帖时间和回复，转发，赞，踩的数量做的热榜召回，这些都属于规则召回的范畴。规则召回的一大优势就是不需要进行模型训练，因此在冷启动或者低频item，低活跃用户的推荐场景下表现良好。</p>
+<h3 id="Embedding的流行"><a href="#Embedding的流行" class="headerlink" title="Embedding的流行"></a>Embedding的流行</h3><p>伴随数据量的上升，将user或者item进行向量化的效果逐渐提升，优势也逐渐显现。使用embedding对user和item进行向量化，之后通过稠密向量得到的user之间或item之间的相互关系往往可以反映出更深层的联系。同时embedding也可以为许多模型提供输入的特征。因此对于大多数推荐系统而言，user和item的embedding几乎都是daily task类型的基础设施。</p>
+<h3 id="协同过滤与item-CF"><a href="#协同过滤与item-CF" class="headerlink" title="协同过滤与item CF"></a>协同过滤与item CF</h3><p>协同过滤是基于item共现的情况挖掘出高频组合，从而进行相似item的推荐。这可以算是item CF在早期非常有效的一种方式了。后续item CF的发展则是朝embedding方向深入挖掘，比较常见的有基于点击序列数据使用word2vec进行item的embedding，或者通过矩阵分解完成的embedding。</p>
+<h3 id="用户聚类和user-CF"><a href="#用户聚类和user-CF" class="headerlink" title="用户聚类和user CF"></a>用户聚类和user CF</h3><p>用户聚类最初也是通过用户画像进行，比如视频app可以为用户在各个分类下的兴趣做一个打分，之后通过这些分数将用户划分成不同的类，也可以将一些指标进行归一化后拼接到一个空间，之后使用k-means等聚类算法。主题模型同样也可以应用到用户聚类上，例如通过LDA算法，基于用户浏览过的items的类型或者tag数据，将用户划分为不同的主题人群。</p>
+<p>随着embedding技术的流行，用户聚类也开始朝向量化转变。之前用来做recall的各类SVD算法，因为可以为生成latent vectors，因此在很多时候都是一边用着SVD做recall，一边就把user和item的embedding工作给做了。基于SVD类型的embedding更加全局化，相比于word2vec而言，SVD的做法更像是GloVe，对时序也不敏感。如果将用户的点击行为排序后，使用doc2vec，也可以根据点击序列得到用户之间的相关性。</p>
+<h3 id="序列化推荐"><a href="#序列化推荐" class="headerlink" title="序列化推荐"></a>序列化推荐</h3><p>RNNs衍生出了很多用于处理序列型数据的神经网络，这类网络面对用户点击序列这种时序型的数据可以给出很多创造性的推荐，是探索型recall算法的典范。常见的有GRU4Rec和BERT4Rec，还有USTC之前发过的一篇BINN。这种序列化推荐如果效果能够做好的话，是可以兼顾探索和利用的。有的时候你觉得上午想了一下自己想买个什么东西，下午打开一个常用的电商App，或许就被推荐了。这种不直接基于你搜索和浏览记录的推荐效果往往非常好，序列化推荐在这一点上是有很大优势的。</p>
+<h3 id="冷启动的召回"><a href="#冷启动的召回" class="headerlink" title="冷启动的召回"></a>冷启动的召回</h3><p>冷启动是指一个全新的user或者item出现在一个推荐系统中时，系统需要基于非常有限的数据进行的粗粒度的推荐方式。因此冷启动通道一般分为user cold start和item cold start两种。</p>
+<p>对于新用户的冷启动，推荐系统需要在尽可能短的时间内捕捉到用户的兴趣。一方面可以通过让用户选择自己感兴趣的领域，为用户推荐该话题下的优质内容；另一方面，也可以推荐较为近期热门的内容或者精品池内容提升用户的点击次数。但是无论是哪一种方式，都需要注意将曝光内容进行打算，有意识的覆盖多个方向。因此，新用户的冷启动经常涉及到基于聚类算法的内容分簇。比如，在为新用户曝光视频内容时，因为不确定用户的兴趣点，因此可以将热门视频曝光给用户，但是在曝光之前，需要对热门视频进行聚类，通过合理的聚类，可以让每个簇代表一种兴趣方向，从而尽可能快的覆盖到用户的潜在兴趣点，使用户的第一次兴趣点击尽早到来。</p>
 
                 
             </div>
@@ -518,7 +531,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://l-tang.github.io/2021/03/07/AFM-A-More-General-FM-Model-with-Attention/">http://l-tang.github.io/2021/03/07/AFM-A-More-General-FM-Model-with-Attention/</a>
+                    <a href="http://l-tang.github.io/2021/03/07/The-Basic-Structure-of-Recommender-Systems/">http://l-tang.github.io/2021/03/07/The-Basic-Structure-of-Recommender-Systems/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -556,8 +569,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/AFM/">
-                                    <span class="chip bg-color">AFM</span>
+                                <a href="/tags/Recommender-System/">
+                                    <span class="chip bg-color">Recommender System</span>
                                 </a>
                             
                         </div>
@@ -729,9 +742,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
                 <a href="/2021/03/07/The-Basic-Structure-of-Recommender-Systems/">
                     <div class="card-image">
@@ -749,9 +763,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-07
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-07
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -760,6 +774,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -778,13 +793,13 @@
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/03/07/That-s-The-Reason-Why-Reco-based-Product-Rely-on-Product-based-Neural-Networks/">
+                <a href="/2021/03/07/AFM-A-More-General-FM-Model-with-Attention/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="That&#39;s The Reason Why Reco-based Product Rely on Product-based Neural Networks">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="AFM: A More General FM Model with Attention">
                         
-                        <span class="card-title">That&#39;s The Reason Why Reco-based Product Rely on Product-based Neural Networks</span>
+                        <span class="card-title">AFM: A More General FM Model with Attention</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -808,8 +823,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/PNN/">
-                        <span class="chip bg-color">PNN</span>
+                    <a href="/tags/AFM/">
+                        <span class="chip bg-color">AFM</span>
                     </a>
                     
                 </div>
